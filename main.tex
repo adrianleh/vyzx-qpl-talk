@@ -1,0 +1,376 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+
+\title{VyZX}
+\subtitle{A Vision for Verifying the ZX Calculus}
+\author{Adrian Lehmann \and Benjamin Caldwell \and Robert Rand}
+\institute{Department of Computer Science \\ University of Chicago}
+\date{}
+
+\usepackage{underscore}           % Only needed if you use pdflatex.
+
+\usepackage{amsthm}
+
+\newtheorem{dfn}{Definition}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{regexpatch}
+\usepackage{letltxmacro}
+\usepackage{aligned-overset}
+
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink]{cleveref}
+
+\usepackage{enumitem}
+
+\usepackage{xspace}
+
+\usepackage{nowidow}
+\usepackage{microtype}
+
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{xcolor}
+%\newcommand{\todo}[1]{{\color{red}\textbf{#1}}}{}
+
+
+\usepackage{cancel}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{wrapfig}
+
+\usepackage{svg}
+
+\usepackage{tikz}
+
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes,shapes.geometric,shapes.misc}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.markings}
+
+\tikzstyle{every picture}=[baseline=-0.25em,scale=0.5]
+
+\pgfkeys{/tikz/tikzit fill/.initial=0}
+\pgfkeys{/tikz/tikzit draw/.initial=0}
+\pgfkeys{/tikz/tikzit shape/.initial=0}
+\pgfkeys{/tikz/tikzit category/.initial=0}
+
+\newcommand{\tikzfig}[1]{%
+\IfFileExists{#1.tikz}
+  {\input{#1.tikz}}
+  {%
+    \IfFileExists{./figures/#1.tikz}
+      {\input{./figures/#1.tikz}}
+      {\tikz[baseline=-0.5em]{\node[draw=red,font=\color{red},fill=red!10!white] {\textit{#1}};}}%
+  }%
+}
+\newcommand{\ctikzfig}[1]{%
+\begin{center}\rm
+  \tikzfig{#1}
+\end{center}}
+
+\newcommand{\oftype}[2]{\text{#1}\,:\,\text{#2}}
+\newcommand{\ZX}[2]{\texttt{ZX}\,\,\text{#1}\,\,\text{#2}}
+\newcommand{\nat}{\texttt{nat}}
+
+\newcommand{\VyZX}{\textsl{Vy}\textsc{ZX}\xspace}
+\newcommand{\SQIR}{\textsc{sqir}\xspace}
+\newcommand{\QASM}{\texttt{QASM}\xspace}
+\newcommand{\QLib}{\texttt{QuantumLib}\xspace}
+\newcommand{\pyZX}{PyZX\xspace}
+\newcommand{\VOQC}{\textsc{Voqc}\xspace}
+\newcommand{\QWIRE}{\texttt{QWIRE}\xspace}
+\newcommand{\inQWIRE}{\texttt{inQWIRE}\xspace}
+\newcommand{\certiq}{\texttt{CertiQ}\xspace}
+\newcommand{\tket}{\texttt{t\(\ket{\text{ket}}\)}\xspace}
+\newcommand{\quartz}{Quartz\xspace}
+
+% links formatting
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+
+\usepackage{mathpartir}
+% Comments
+\usepackage{etoolbox}
+
+\definecolor{egreen}{rgb}{0.31, 0.78, 0.47}
+\definecolor{ate}{rgb}{0.58, 0.0, 0.83}
+\newtoggle{revision}
+%\toggletrue{revision}
+\togglefalse{revision}
+
+\iftoggle{revision}{
+    \newcommand{\rnr}[1]{\textit{\textcolor{blue}{Robert: #1}}}
+    \newcommand{\ael}[1]{\textit{\textcolor{purple}{Adrian: #1}}}
+    \newcommand{\ben}[1]{\textit{\textcolor{egreen}{Ben: #1}}}
+    \newcommand{\todo}[1]{\textit{\textcolor{red}{TODO: #1}}}
+    %%%% Refcheck
+    
+    \usepackage{refcheck}
+    
+    %%% Infrastructure    
+    \makeatletter
+    \newcommand{\refcheckize}[1]{%
+      \expandafter\let\csname @@\string#1\endcsname#1%
+      \expandafter\DeclareRobustCommand\csname relax\string#1\endcsname[1]{%
+        \csname @@\string#1\endcsname{##1}\wrtusdrf{##1}}%
+      \expandafter\let\expandafter#1\csname relax\string#1\endcsname
+    }
+    \makeatother
+    %%%
+    
+    %%% Now we add the reference commands we want refcheck to be aware of
+    \refcheckize{\cref}
+    \refcheckize{\Cref}
+}{
+    \newcommand{\rnr}[1]{}
+    \newcommand{\ael}[1]{}
+    \newcommand{\ben}[1]{}
+    \newcommand{\todo}[1]{}
+}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+
+\pgfdeclarelayer{edgelayer}
+\pgfdeclarelayer{nodelayer}
+\pgfsetlayers{background, edgelayer, nodelayer, main}
+\tikzstyle{none}=[inner sep=0mm]
+\tikzstyle{every loop}=[]
+\tikzstyle{mark coordinate}=[inner sep=0pt,outer sep=0pt,minimum size=3pt,fill=black,circle]
+\input{zh.tikzdefs}
+\input{zh.tikzstyles}
+
+
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\newcommand{\mailtodomain}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+
+\newcommand{\titletext}{\VyZX : A Vision for Verifying the ZX Calculus}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Why Verify?}
+
+    \ben{I'm imagining a diagram on the right side showing a circuit -> optimizing black box -> circuit, going vertically.}
+    
+    The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum program optimization.
+    
+    In \alert{optimization} passes we would like to guarantee a \alert{preservation of semantics} for our quantum circuit.
+    
+    Common practices such as unit testing, SMT-based verification, or translation validation can't verify every optimization is correct.
+    
+    Verification can give us these guarantees.
+    
+\end{frame}
+
+\begin{frame}{Approaching Verification}
+
+    Verification requires the right \alert{data structures}. Proof assistants  work well with \alert{inductive} data structures and poorly with dictionaries or maps. We will be adapting \alert{string diagrams} inductively:
+    
+    \begin{figure}
+
+            \begin{subfigure}{.6\textwidth}
+                \tikzfig{compose_string}
+                \qquad
+                \tikzfig{parallel_string}
+            \end{subfigure}
+            
+            \begin{subfigure}{.5\textwidth}
+                \tikzfig{swap_string}
+                \qquad
+                \tikzfig{cap}
+                \quad
+                \tikzfig{cup}
+            \end{subfigure}
+        
+        
+        \label{fig:string}
+    \end{figure}
+    
+\end{frame}
+
+\begin{frame}{Inductive ZX Diagrams}
+    
+    To define our ZX diagrams, we take these string diagram constructions and \alert{add Z and X spiders}.
+    
+    \begin{figure}[t]
+    \centering
+            
+            \begin{subfigure}{.4\textwidth}
+            \inferrule
+            {\oftype{in out}{\(\N\)} \and \oftype{\(\alpha\)}{\(\R\)}}
+            {\oftype{\texttt{Z_Spider} in out \(\alpha\)}{\ZX{in}{out}}}
+            \end{subfigure}\hfill\begin{subfigure}{.4\textwidth}
+            \inferrule
+            {\oftype{in out}{\(\N\)} \and \oftype{\(\alpha\)}{\(\R\)}}
+            {\oftype{\texttt{X_Spider} in out \(\alpha\)}{\ZX{in}{out}}}
+            \end{subfigure}
+            
+            \begin{subfigure}{.25\textwidth}
+            \inferrule{ }{\oftype{\texttt{Cap}}{\ZX{0}{2}}}
+            \end{subfigure}\hfill\begin{subfigure}{.25\textwidth}
+            \inferrule{ }{\oftype{\texttt{Cup}}{\ZX{2}{0}}}
+            \end{subfigure}\hfill\begin{subfigure}{.25\textwidth}
+            \inferrule{ }{\oftype{\texttt{Swap}}{\ZX{2}{2}}}
+            \end{subfigure}\hfill\begin{subfigure}{.25\textwidth}
+            \inferrule{ }{\oftype{\texttt{Empty}}{\ZX{0}{0}}}
+            \end{subfigure}
+            
+            \begin{subfigure}{.4\textwidth}
+            \inferrule
+            {\oftype{zx1}{\ZX{in}{mid}} \and \oftype{zx2}{\ZX{mid}{out}}}
+            {\oftype{\texttt{Compose} zx1 zx2}{\ZX{in}{out}}}
+            \end{subfigure}\hfill\begin{subfigure}{.4\textwidth}
+            \inferrule
+            {\oftype{zx1}{\ZX{in1}{out1}} \and \oftype{zx2}{\ZX{in2}{out2}}}
+            {\oftype{\texttt{Stack} zx1 zx2}{\ZX{(in1 + in2)}{(out1 + out2)}}}
+            \end{subfigure}
+
+        \label{fig:blockconstructors}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Semantics}
+
+    To verify transformations on diagrams, we introduce a system of semantics. Our semantics system will rely on QuantumLib.
+    %a mathematical library specialized for quantum computing.
+    
+    \ben{Semantic maps for diagram pieces to their matrix notations}
+    \begin{align*}
+        \texttt{Z_Spider n m }\alpha \quad &\mapsto \hspace{47pt}
+        \begin{bmatrix} 
+            1 & \dotsi & 0 \\ 
+            \vdots & \ddots & 0 \\ 
+            0 & 0 & e^{i\alpha}
+        \end{bmatrix}
+    \\
+    \texttt{X_Spider n m }\alpha  \quad &\mapsto \quad H^{\otimes m} \times 
+        \begin{bmatrix} 
+            1 & \dotsi & 0 \\ 
+            \vdots & \ddots & 0 \\ 
+            0 & 0 & e^{i\alpha}
+        \end{bmatrix} \times H^{\otimes n}
+    \end{align*}
+\end{frame}
+    
+\begin{frame}{More Semantics}
+    \begin{align*}
+        \texttt{Cap} &\mapsto \ben{I just put cap and cup in, need to verify they are correct}
+        \begin{bmatrix} 
+            1 & 0 & 0 & 1
+        \end{bmatrix}
+    \\
+        \texttt{Cup} &\mapsto 
+        \begin{bmatrix} 
+            1 & 0 & 0 & 1
+        \end{bmatrix}^\top
+    \\
+        \texttt{Swap} &\mapsto
+        \begin{bmatrix}
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 0 & 1
+        \end{bmatrix}
+    \\
+        \texttt{Empty} &\mapsto
+        \begin{bmatrix}
+            1
+        \end{bmatrix}
+    \\        
+        \texttt{Compose zx1 zx2} &\mapsto 
+        \texttt{semantics(zx2)} \times \texttt{semantics(zx1)}
+    \\
+        \texttt{Stack zx1 zx2} &\mapsto
+        \texttt{semantics(zx1)} \otimes \texttt{semantics(zx2)}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Proportionality}
+
+    In order to say two diagrams are \alert{equivalent}, we define a new relation on diagrams using our above semantics.
+    
+    Our relation is called \alert{\texttt{proportional}} and uses the symbol $\propto$. Our relation is defined as
+    \[
+        \exists c \neq 0: \texttt{semantics}(zx1) = c * \texttt{semantics}(zx2) \implies zx1 \propto zx2
+    \]
+    
+    This will allow us to use Coq's \alert{rewriting capabilities} in our proofs about diagrams.
+
+\end{frame}
+
+\begin{frame}{Optimization}
+
+    Once we have these rules, we can talk about building optimization passes. An optimization pass will: 
+    
+    \begin{itemize}
+        \item Attempt to \alert{recognize a pattern}
+        \item \alert{Modify the diagram} with some function $f$
+    \end{itemize}
+    
+    The verification then is a \textcolor{purple}{\texttt{Theorem}} which states that for any diagram $zx$, $zx$ is proportional to $f(zx)$.
+    
+\end{frame}
+
+\begin{frame}{An Example: Color Swapping}
+
+    \ben{Just an idea for the live code, we can replace this with anything}
+
+    Consider the function which takes all spiders and \alert{switches their colors}.\\
+    \(\hookrightarrow\) Equivalent to \alert{surrounding diagram with Hadamard gates}.
+    
+    % Create a Coq file illustrating a ZX-based H-reducing optimization and ColorSwap.
+    % Interactive Code Section
+   
+\end{frame}
+
+\begin{frame}{Summary}
+
+         Why should we care about verified tool kits for the ZX calculus?
+         
+         How we look at diagrams inductively.
+         
+         How to encode semantics and equivalence for our inductive diagrams.
+         
+         A limited example of how writing an optimization pass works.
+         
+         How verifying an optimization pass will work.
+
+\end{frame}
+
+\end{document}
