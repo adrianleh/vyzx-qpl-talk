@@ -2,11 +2,6 @@
 \usetheme{metropolis}
 \usepackage[utf8]{inputenc}
 
-\title{VyZX}
-\subtitle{A Vision for Verifying the ZX Calculus}
-\author{Adrian Lehmann \and Benjamin Caldwell \and Robert Rand}
-\institute{Department of Computer Science \\ University of Chicago}
-\date{}
 
 \usepackage{underscore}           % Only needed if you use pdflatex.
 
@@ -180,6 +175,12 @@
 
 \newcommand{\titletext}{\VyZX : A Vision for Verifying the ZX Calculus}
 
+\title{\VyZX}
+\subtitle{A Vision for \alert{Verifying the ZX Calculus}}
+\author{Adrian Lehmann \and Benjamin Caldwell \and Robert Rand}
+\institute{Department of Computer Science \\ University of Chicago}
+\date{}
+
 \begin{document}
 
 \maketitle
@@ -200,7 +201,8 @@
 
 \begin{frame}{Approaching Verification}
 
-    Verification requires the right \alert{data structures}. Proof assistants  work well with \alert{inductive} data structures and poorly with dictionaries or maps. We will be adapting \alert{string diagrams} inductively:
+    Verification requires the right \alert{data structures}: Proof assistants work well with \alert{inductive} data structures and poorly with dictionaries or maps.\\
+    We will be adapting \alert{string diagrams} inductively:
     
     \begin{figure}
 
@@ -267,7 +269,7 @@
 
 \begin{frame}{Semantics}
 
-    To verify transformations on diagrams, we introduce a system of semantics. Our semantics system will rely on QuantumLib.
+    To verify transformations on diagrams, we introduce a \alert{system of semantics} based on \QLib.
     %a mathematical library specialized for quantum computing.
     
     \ben{Semantic maps for diagram pieces to their matrix notations}
@@ -323,27 +325,28 @@
 
 \begin{frame}{Proportionality}
 
-    In order to say two diagrams are \alert{equivalent}, we define a new relation on diagrams using our above semantics.
+    To reason about \alert{equivalance} of diagrams, we define a relation using our semantics.
     
-    Our relation is called \alert{\texttt{proportional}} and uses the symbol $\propto$. Our relation is defined as
+    The relation is called \alert{\texttt{proportional}}, uses the symbol \alert{$\propto$}, and is defined as
     \[
         \exists c \neq 0: \texttt{semantics}(zx1) = c * \texttt{semantics}(zx2) \implies zx1 \propto zx2
     \]
     
-    This will allow us to use Coq's \alert{rewriting capabilities} in our proofs about diagrams.
+    A reloation allow us to use Coq's \alert{rewriting capabilities} in proofs about diagrams.
 
 \end{frame}
 
 \begin{frame}{Optimization}
 
-    Once we have these rules, we can talk about building optimization passes. An optimization pass will: 
+    With proportionality we prove rules and create optimization passes. An optimization pass will: 
     
     \begin{itemize}
         \item Attempt to \alert{recognize a pattern}
         \item \alert{Modify the diagram} with some function $f$
     \end{itemize}
     
-    The verification then is a \textcolor{purple}{\texttt{Theorem}} which states that for any diagram $zx$, $zx$ is proportional to $f(zx)$.
+    The verification then is a \textcolor{purple}{\texttt{Theorem}} which states that for any diagram $zx$, \alert{$zx \propto f(zx)$}.\\
+    \(\hookrightarrow\) Prove using other rewrite rules or \QLib matrices
     
 \end{frame}
 
@@ -361,13 +364,13 @@
 
 \begin{frame}{Summary}
 
-         Why should we care about verified tool kits for the ZX calculus?
+         \alert{Why} should we care about verified tool kits for the ZX calculus?
          
-         How we look at diagrams inductively.
+         How we look at \alert{diagrams inductively}.
          
-         How to encode semantics and equivalence for our inductive diagrams.
+         How to encode \alert{semantics and equivalence} for our inductive diagrams.
          
-         A limited example of how writing an optimization pass works.
+         A limited example of how writing an \alert{optimization} pass works.
          
          How verifying an optimization pass will work.
 
