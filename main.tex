@@ -2,6 +2,7 @@
 \usetheme{metropolis}
 \usepackage[utf8]{inputenc}
 
+\metroset{block=fill}
 
 \usepackage{underscore}           % Only needed if you use pdflatex.
 
@@ -191,15 +192,13 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
 
 \begin{frame}{Why Verify?}
 
-    \ben{I'm imagining a diagram on the right side showing a circuit -> optimizing black box -> circuit, going vertically.}
-    
-    The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum program optimization.\pause
+  The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum programs. In particular, \pyZX has proven the ZX calculus as an IR for quantum program optimization [Duncan et al.]. \pause
     
     In \alert{optimization} passes we would like to guarantee a \alert{preservation of semantics} for our quantum circuit.\pause
     
     Common practices such as unit testing, SMT-based verification, or translation validation can't verify every optimization is correct.\pause
     
-    Verification can give us these guarantees.
+    Verification can give us these guarantees which are useful for quantum programming [Hietala et al].
     
 \end{frame}
 
@@ -273,7 +272,7 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
 
 \begin{frame}{Semantics}
 
-    To verify transformations on diagrams, we introduce a \alert{system of semantics} based on \QLib.
+  To verify transformations on diagrams, we introduce a \alert{system of semantics} based on \QLib\footnote{\texttt{https://github.com/inQWIRE/QuantumLib}}.
     %a mathematical library specialized for quantum computing.
     
     \ben{Semantic maps for diagram pieces to their matrix notations}
@@ -296,7 +295,7 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
     
 \begin{frame}{More Semantics}
     \begin{align*}
-        \texttt{Cap} &\mapsto \ben{I just put cap and cup in, need to verify they are correct}
+        \texttt{Cap} &\mapsto 
         \begin{bmatrix} 
             1 & 0 & 0 & 1
         \end{bmatrix}
@@ -318,7 +317,7 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
         \begin{bmatrix}
             1
         \end{bmatrix}
-    \\\pause      
+    \\
         \texttt{Compose zx1 zx2} &\mapsto 
         \texttt{semantics(zx2)} \times \texttt{semantics(zx1)}
     \\
@@ -336,32 +335,36 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
         \exists c \neq 0: \texttt{semantics}(zx1) = c * \texttt{semantics}(zx2) \implies zx1 \propto zx2
     \]
     
-    A reloation allow us to use Coq's \alert{rewriting capabilities} in proofs.
+    A relation allow us to use Coq's \alert{rewriting capabilities} in proofs.
 
 \end{frame}
 
 \begin{frame}{Rules}
-    \begin{center}
-        \textbf{Spider fusion}
+      \begin{figure}
+        \begin{subfigure}{.5\textwidth}
+          \centering
+          \textbf{Spider fusion}
+        \end{subfigure}\begin{subfigure}{.5\textwidth}
+          \centering
+          \textbf{Hopf rule}
+        \end{subfigure}
 
-        \tikzfig{spider-fusion-1-1}
-    \end{center}
-\end{frame}
+        \begin{subfigure}[t]{.5\textwidth}
+          \centering
+          \tikzfig{spider-fusion-1-1}
+        \end{subfigure}\begin{subfigure}{.5\textwidth}
+          \centering
+          \tikzfig{hopf}
+        \end{subfigure}
+      \end{figure}
 
-\begin{frame}{Rules}
-    \begin{center}
-        \textbf{Hopf rule}
-
-        \tikzfig{hopf}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Rules}
-    \begin{center}
+      \begin{figure}
+        \centering
         \textbf{Bi-pi rule}
 
         \tikzfig{bi-pi}
-    \end{center}
+      \end{figure}
+
 \end{frame}
 
 \begin{frame}{Rules}
@@ -385,20 +388,6 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
     \tikzfig{stack-compose-comm}
 \end{frame}
 
-\begin{frame}{Goal: Optimization}
-
-    With proportionality and rules we can create optimization passes. An optimization pass will: 
-    
-    \begin{itemize}
-        \item Attempt to \alert{recognize a pattern}
-        \item \alert{Modify the diagram} with some function $f$
-    \end{itemize}\pause
-    
-    The verification then is a \textcolor{purple}{\texttt{Theorem}} which states that for any diagram $zx$, \alert{$zx \propto f(zx)$}.\\
-    \(\hookrightarrow\) Prove using other rewrite rules or \QLib matrices
-    
-\end{frame}
-
 \begin{frame}{Summary}
 
          \alert{Why} should we care about verified tool kits for the ZX calculus?
@@ -407,9 +396,18 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
          
          How to encode \alert{semantics and equivalence} for our inductive diagrams.
          
-         A limited example of how writing an \alert{optimization} pass works.
-         
-         How verifying an optimization pass will work.
+         An example of how VyZX can be used to do diagram rewriting.
+
+
+      \begin{figure}
+        \centering
+        \begin{subfigure}{0.6\textwidth}
+          \begin{alertblock}{\centering GitHub}
+            \centering
+            \texttt{https://github.com/inQWIRE/VyZX}
+          \end{alertblock}
+        \end{subfigure}
+      \end{figure}
 
 \end{frame}
 
