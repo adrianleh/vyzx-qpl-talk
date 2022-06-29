@@ -189,11 +189,11 @@
 
     \ben{I'm imagining a diagram on the right side showing a circuit -> optimizing black box -> circuit, going vertically.}
     
-    The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum program optimization.
+    The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum program optimization.\pause
     
-    In \alert{optimization} passes we would like to guarantee a \alert{preservation of semantics} for our quantum circuit.
+    In \alert{optimization} passes we would like to guarantee a \alert{preservation of semantics} for our quantum circuit.\pause
     
-    Common practices such as unit testing, SMT-based verification, or translation validation can't verify every optimization is correct.
+    Common practices such as unit testing, SMT-based verification, or translation validation can't verify every optimization is correct.\pause
     
     Verification can give us these guarantees.
     
@@ -201,8 +201,8 @@
 
 \begin{frame}{Approaching Verification}
 
-    Verification requires the right \alert{data structures}: Proof assistants work well with \alert{inductive} data structures and poorly with dictionaries or maps.\\
-    We will be adapting \alert{string diagrams} inductively:
+    Verification requires the right \alert{data structures}: Proof assistants work well with \alert{inductive} data structures and poorly with dictionaries or maps.\\\pause
+    We adapt \alert{string diagrams} inductively:
     
     \begin{figure}
 
@@ -229,7 +229,7 @@
 \begin{frame}{Inductive ZX Diagrams}
     
     To define our ZX diagrams, we take these string diagram constructions and \alert{add Z and X spiders}.
-    
+    \pause
     \begin{figure}[t]
     \centering
             
@@ -242,7 +242,7 @@
             {\oftype{in out}{\(\N\)} \and \oftype{\(\alpha\)}{\(\R\)}}
             {\oftype{\texttt{X_Spider} in out \(\alpha\)}{\ZX{in}{out}}}
             \end{subfigure}
-            
+            \pause
             \begin{subfigure}{.25\textwidth}
             \inferrule{ }{\oftype{\texttt{Cap}}{\ZX{0}{2}}}
             \end{subfigure}\hfill\begin{subfigure}{.25\textwidth}
@@ -252,7 +252,7 @@
             \end{subfigure}\hfill\begin{subfigure}{.25\textwidth}
             \inferrule{ }{\oftype{\texttt{Empty}}{\ZX{0}{0}}}
             \end{subfigure}
-            
+            \pause
             \begin{subfigure}{.4\textwidth}
             \inferrule
             {\oftype{zx1}{\ZX{in}{mid}} \and \oftype{zx2}{\ZX{mid}{out}}}
@@ -314,7 +314,7 @@
         \begin{bmatrix}
             1
         \end{bmatrix}
-    \\        
+    \\\pause      
         \texttt{Compose zx1 zx2} &\mapsto 
         \texttt{semantics(zx2)} \times \texttt{semantics(zx1)}
     \\
@@ -326,40 +326,73 @@
 \begin{frame}{Proportionality}
 
     To reason about \alert{equivalance} of diagrams, we define a relation using our semantics.
-    
+    \pause
     The relation is called \alert{\texttt{proportional}}, uses the symbol \alert{$\propto$}, and is defined as
     \[
         \exists c \neq 0: \texttt{semantics}(zx1) = c * \texttt{semantics}(zx2) \implies zx1 \propto zx2
     \]
     
-    A reloation allow us to use Coq's \alert{rewriting capabilities} in proofs about diagrams.
+    A reloation allow us to use Coq's \alert{rewriting capabilities} in proofs.
 
 \end{frame}
 
-\begin{frame}{Optimization}
+\begin{frame}{Rules}
+    \begin{center}
+        \textbf{Spider fusion}
 
-    With proportionality we prove rules and create optimization passes. An optimization pass will: 
+        \tikzfig{spider-fusion-1-1}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Rules}
+    \begin{center}
+        \textbf{Hopf rule}
+
+        \tikzfig{hopf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Rules}
+    \begin{center}
+        \textbf{Bi-pi rule}
+
+        \tikzfig{bi-pi}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Rules}
+    \begin{center}
+        \textbf{Color Change bihadamard rule}
+
+        \tikzfig{bihadamard}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Limitations}
+    Using inductive definitions for the purposes of proof came at a cost.\pause
+
+    Graphically, \alert{adjacency is obvious}. Our inductive definition \alert{buries} this information somewhere in Stack and Compose constructors.\pause
+
+    The inductive \alert{Stack} and \alert{Compose} constructures also \alert{create new structural properties} such as associativity within stacks and distributivity of compose. 
+\end{frame}
+
+\begin{frame}{Rules: An example}
+    \centering
+    \tikzfig{stack-compose-comm}
+\end{frame}
+
+\begin{frame}{Goal: Optimization}
+
+    With proportionality and rules we can create optimization passes. An optimization pass will: 
     
     \begin{itemize}
         \item Attempt to \alert{recognize a pattern}
         \item \alert{Modify the diagram} with some function $f$
-    \end{itemize}
+    \end{itemize}\pause
     
     The verification then is a \textcolor{purple}{\texttt{Theorem}} which states that for any diagram $zx$, \alert{$zx \propto f(zx)$}.\\
     \(\hookrightarrow\) Prove using other rewrite rules or \QLib matrices
     
-\end{frame}
-
-\begin{frame}{An Example: Color Swapping}
-
-    \ben{Just an idea for the live code, we can replace this with anything}
-
-    Consider the function which takes all spiders and \alert{switches their colors}.\\
-    \(\hookrightarrow\) Equivalent to \alert{surrounding diagram with Hadamard gates}.
-    
-    % Create a Coq file illustrating a ZX-based H-reducing optimization and ColorSwap.
-    % Interactive Code Section
-   
 \end{frame}
 
 \begin{frame}{Summary}
