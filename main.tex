@@ -88,7 +88,7 @@
 \newcommand{\QASM}{\texttt{QASM}\xspace}
 \newcommand{\QLib}{\texttt{QuantumLib}\xspace}
 \newcommand{\pyZX}{PyZX\xspace}
-\newcommand{\VOQC}{\textsc{Voqc}\xspace}
+\newcommand{\VOQC}{\textsc{VOQC}\xspace}
 \newcommand{\QWIRE}{\texttt{QWIRE}\xspace}
 \newcommand{\inQWIRE}{\texttt{inQWIRE}\xspace}
 \newcommand{\certiq}{\texttt{CertiQ}\xspace}
@@ -192,13 +192,13 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
 
 \begin{frame}{Why Verify?}
 
-  The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum programs. In particular, \pyZX has proven the ZX calculus as an IR for quantum program optimization [Duncan et al.]. \pause
+  The \alert{ZX Calculus} has proven itself a valuable intermediate representation for quantum programs. In particular, \alert{\pyZX} has proven the ZX calculus as an IR for quantum program optimization [Duncan et al.]. \pause
     
     In \alert{optimization} passes we would like to guarantee a \alert{preservation of semantics} for our quantum circuit.\pause
     
     Common practices such as unit testing, SMT-based verification, or translation validation can't verify every optimization is correct.\pause
     
-    Verification can give us these guarantees which are useful for quantum programming [Hietala et al].
+    Verification can give us these guarantees which are useful for quantum programming, as seen in \alert{\VOQC} [Hietala et al].
     
 \end{frame}
 
@@ -265,7 +265,6 @@ No. CCF-1730449 and the Air Force Office of Scientific Research under Grant No. 
             {\oftype{zx1}{\ZX{in1}{out1}} \and \oftype{zx2}{\ZX{in2}{out2}}}
             {\oftype{\texttt{Stack} zx1 zx2}{\ZX{(in1 + in2)}{(out1 + out2)}}}
             \end{subfigure}
-
         \label{fig:blockconstructors}
     \end{figure}
 \end{frame}
