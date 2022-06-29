@@ -1,0 +1,69 @@
+SLIDE 1:
+
+BEN:
+Hi everyone, I'm Ben and this is Adrian. Today we will be presenting on VyZX, a verified software toolkit written in Coq for the ZX calculus.
+
+SLIDE 2:
+
+BEN:
+Some explanation is owed to why we would even want to verify the ZX calculus. We aren't trying to settle math behind the ZX calculus, but rather we are trying to create a package to verify software built about the ZX calculus.
+
+BEN:
+The ZX calculus has proven itself as a useful IR for quantum programs, in particular it has found use in quantum program optimization.
+
+ADVANCE
+
+BEN: To show an optimization pass is bug-free we would want to show that it preserves the semantics for any quantum circuit passed to it.
+
+ADVANCE
+
+BEN: Common methods to reduce bugs in optimizers are valid approaches, but they are not perfect. They all have the same failing; they can show that some bugs aren't present, but they can't guarantee the absence of bugs. In the Quantum world, this is really compelling because Quantum programs are already difficult to debug, so knowing that we can trust our optimizer allows us to simplify the debugging process.
+
+ADVANCE
+
+BEN: Verification can bridge this gap for us and actually guarantee that our circuit's semantics have not changed. The work by Hietala et al on VOQC has proven that it is reasonable to make a verified quantum circuit optimizer. VOQC is a part of a fully verified quantum software stack called INQWIRE, of which VyZX is also a part.
+
+SLIDE 2
+
+BEN: Maybe at this point you are starting to believe that the ZX calculus is worth verifying. One problem we will have to deal with is how the Coq proof assistant approaches proof. Proof assistants like to work with inductive data structures, and often have trouble with abstract dictionaries or maps where the implementation details might be obfuscated.
+
+ADVANCE
+
+BEN: Our goal then is to try to find an inductive data structure, and for that we look at string diagrams. We can see that we can separate diagrams by either composing them or parallelizing them. We also add in caps, cups, and a singular swap as we will be dealing with string diagrams for symmetric categories.
+
+SLIDE 3
+
+BEN: If we add in Z and X spiders, then we will have our inductive ZX diagram structure.
+
+ADVANCE
+
+BEN: And they will look like this, where you provide the inputs, outputs, and rotation and get a ZX diagram with that many inputs and outputs.
+
+ADVANCE
+
+BEN: Then we throw in Cap, Cups, Swap, and Empty diagrams,
+
+ADVANCE
+
+BEN: And finally composition and stacking, where composition requires the number of outputs of the first diagram equals the outputs of the second diagram.
+
+SLIDE 4
+
+BEN: Now that we have our structure, we need to give it meaning. For this, we rely on QuantumLib, a verified mathematics library which is focused on quantum computation that is also a part of INQWIRE. Our semantics for the Z_Spider are standard, and we also provide a bra-ket notation based version of the semantics. Our X semantics are different, as build it based on the Z_Spider semantics for simplicitys sake.
+
+SLIDE 5
+
+BEN: Everything else is defined in a standard way, with compose corresponding to multiplication and stack to kronecker product.
+
+SLIDE 6
+
+BEN: Now that we have our structure with meaning, we need a system to say diagrams are equivalent and rewrite between them. For that we define an our proportionality relation, where as long as our semantics are within a scalar multiple of each other we say they are proportional diagrams. We then show this is an equivalence relation and this allows us to use Coq's powerful rewrite system.
+
+BEN: Now I'm going to pass things over to Adrian who will show us the current state of VyZX.
+
+
+ADRIANS SECTION
+
+SLIDE 11
+
+BEN: In this talk we have covered why verified tool kits are important, how we can embed the ZX calculus in a proof assistant, how those diagrams will actually be manipulated, and a short example of how VyZX can be used. Thank you for your attention.
